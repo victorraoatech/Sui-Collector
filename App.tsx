@@ -11,17 +11,12 @@ import { SettingsPage } from './pages/SettingsPage';
 import { ClubsListPage } from './pages/ClubsListPage';
 import { ClubDetailPage } from './pages/ClubDetailPage';
 import { AssetDetailPage } from './pages/AssetDetailPage';
+import { EditProfilePage } from './pages/EditProfilePage';
 
 const PageRenderer: React.FC = () => {
     const { currentPage, isAuthenticated, setCurrentPage, clubId } = useAppContext();
 
-    useEffect(() => {
-        // Redirect to profile page if authenticated user lands on home
-        if (isAuthenticated && currentPage === Page.Home) {
-            setCurrentPage(Page.Profile);
-        }
-    }, [isAuthenticated, currentPage, setCurrentPage]);
-
+ 
     switch (currentPage) {
         case Page.Home:
             return <HomePage />;
@@ -39,6 +34,8 @@ const PageRenderer: React.FC = () => {
             return clubId ? <ClubDetailPage clubId={clubId} /> : <ClubsListPage />;
         case Page.AssetDetail:
             return <AssetDetailPage />;
+        case Page.EditProfile:
+            return <EditProfilePage />;    
         default:
             return isAuthenticated ? <ProfilePage /> : <HomePage />;
     }

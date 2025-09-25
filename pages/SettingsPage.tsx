@@ -58,6 +58,7 @@ export const SettingsPage: React.FC = () => {
                     </div>
                 </div>
 
+                
                 {activeTab === 'profile' && (
                     <div className="space-y-8">
                         <div className="flex items-center space-x-6">
@@ -114,4 +115,4 @@ export const SettingsPage: React.FC = () => {
             </div>
         </div>
     );
-};
+}

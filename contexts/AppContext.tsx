@@ -3,6 +3,7 @@ import { Page, User, Wallet, Theme } from '../types';
 import { MOCK_USER } from '../constants';
 
 type ProfileTab = 'owned' | 'created' | 'activity' | 'portfolio';
+type Theme = 'light' | 'dark';
 
 interface AppContextType {
   currentPage: Page;
@@ -33,10 +34,17 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [isWalletModalOpen, setWalletModalOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>('dark');
   const [currentProfileTab, setCurrentProfileTab] = useState<ProfileTab>('owned');
   const [clubId, setClubId] = useState<string | null>(null);
   const [assetId, setAssetId] = useState<string | null>(null);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if(typeof window !== undefined && window.localStorage){
+      const storedTheme = window.localStorage.getItem('theme') as Theme;
+      return storedTheme || 'dark';
+    }
+    return 'dark';
+  });
+  
 
 
   useEffect(() => {
@@ -107,14 +115,18 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }
   
+ useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const toggleTheme = useCallback(() => {
-    setTheme(prevTheme => {
-        const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.classList.toggle('dark', newTheme === 'dark');
-        return newTheme;
-    });
-  }, []);
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  }, []);
 
   return (
     <AppContext.Provider

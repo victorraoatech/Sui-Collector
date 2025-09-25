@@ -6,7 +6,7 @@ import { Button } from './Button';
 
 type ProfileTab = 'owned' | 'created' | 'activity' | 'portfolio';
 
-const ProfileSidebarLink: React.FC<{ tab: ProfileTab; icon: JSX.Element; children: React.ReactNode; }> = ({ tab, icon, children }) => {
+const ProfileSidebarLink: React.FC<{ tab: ProfileTab; icon: React.ReactElement; children: React.ReactNode; }> = ({ tab, icon, children }) => {
     const { currentProfileTab, setCurrentProfileTab } = useAppContext();
     const isActive = currentProfileTab === tab;
     return (
@@ -44,30 +44,41 @@ export const ProfileLayout: React.FC<{ children: React.ReactNode }> = ({ childre
 
     return (
         <div className="flex min-h-screen pt-20">
-            <aside className="fixed top-0 left-0 w-72 h-full bg-background border-r border-secondary pt-20">
-                <div className="p-6 h-full flex flex-col">
-                    <UserProfileCard user={user} wallet={wallet} />
-                    <nav className="flex-grow space-y-2 mt-6">
-                        <ProfileSidebarLink tab="owned" icon={<AssetsIcon />}>Owned Assets</ProfileSidebarLink>
-                        <ProfileSidebarLink tab="created" icon={<MintIcon />}>Created Assets</ProfileSidebarLink>
-                        <ProfileSidebarLink tab="activity" icon={<ActivityIcon />}>Activity Feed</ProfileSidebarLink>
-                        <ProfileSidebarLink tab="portfolio" icon={<PortfolioIcon />}>Portfolio</ProfileSidebarLink>
-                    </nav>
-                    <div className="mt-auto space-y-2">
-                        <Button variant="ghost" className="w-full !justify-start" onClick={() => setCurrentPage(Page.Settings)}>
-                            <SettingsIcon className="w-5 h-5 mr-3" />
-                            Settings
-                        </Button>
-                        <Button variant="ghost" className="w-full !justify-start text-red-500/80 hover:!bg-red-500/10 hover:!text-red-500" onClick={disconnectWallet}>
-                           <LogoutIcon className="w-5 h-5 mr-3" />
-                           Disconnect
-                        </Button>
-                    </div>
-                </div>
-            </aside>
-            <main className="ml-72 flex-1 p-8">
-                {children}
-            </main>
-        </div>
+  <aside className="custom-scrollbar fixed top-0 left-0 w-72 h-full bg-background border-r border-secondary pt-20 overflow-y-auto">
+
+  <div className="p-6 h-full flex flex-col">
+    <UserProfileCard user={user} wallet={wallet} />
+    <nav className="flex-grow space-y-2 mt-6">
+      <ProfileSidebarLink tab="owned" icon={<AssetsIcon />}>Owned Assets</ProfileSidebarLink>
+      <ProfileSidebarLink tab="created" icon={<MintIcon />}>Created Assets</ProfileSidebarLink>
+      <ProfileSidebarLink tab="activity" icon={<ActivityIcon />}>Activity Feed</ProfileSidebarLink>
+      <ProfileSidebarLink tab="portfolio" icon={<PortfolioIcon />}>Portfolio</ProfileSidebarLink>
+    </nav>
+    <div className="mt-auto space-y-2">
+      <button
+        onClick={() => setCurrentPage(Page.Settings)}
+        className="flex items-center w-full px-4 py-3 rounded-lg text-sm font-semibold transition-colors text-text-secondary hover:bg-surface hover:text-text-primary"
+      >
+        <SettingsIcon className="w-5 h-5 mr-3" />
+        Settings
+      </button>
+
+      <button
+        onClick={disconnectWallet}
+        className="flex items-center w-full px-4 py-3 rounded-lg text-sm font-semibold transition-colors text-red-400 hover:bg-red-500/10 hover:text-red-300"
+      >
+        <LogoutIcon className="w-5 h-5 mr-3" />
+        Logout
+      </button>
+    </div>
+  </div>
+</aside>
+
+
+  <main className="ml-72 flex-1 p-8">
+    {children}
+  </main>
+</div>
+
     );
 };

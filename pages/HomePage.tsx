@@ -1,16 +1,32 @@
 import React from 'react';
+import { useInView } from "react-intersection-observer";
 import { Asset, Collection } from '../types';
 import { MOCK_COLLECTIONS, MOCK_TRENDING_ASSETS } from '../constants';
 import { Button } from '../components/Button';
 import { useAppContext } from '../contexts/AppContext';
 import { Page } from '../types';
+import CountUp from "react-countup";
+import VisibilitySensor from "react-visibility-sensor";
+import image from "../asset/hero-bg.jpg";
+const StatCard: React.FC<{ value: number; label: string }> = ({ value, label }) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,  
+    threshold: 0.3,     
+  });
 
-const StatCard: React.FC<{ value: string; label: string }> = ({ value, label }) => (
-    <div className="bg-surface/50 p-6 rounded-lg">
-        <p className="text-3xl font-bold text-text-primary">{value}</p>
-        <p className="text-text-secondary mt-1">{label}</p>
+  return (
+    <div ref={ref} className="bg-gray-800 p-6 rounded-lg">
+      <p className="text-3xl font-bold text-text-primary">
+        {inView ? (
+          <CountUp start={0} end={value} duration={2} separator="," />
+        ) : (
+          "0"
+        )}
+      </p>
+      <p className="text-text-secondary mt-1">{label}</p>
     </div>
-);
+  );
+};
 
 const CollectionCard: React.FC<{ collection: Collection }> = ({ collection }) => (
     <div className="rounded-xl overflow-hidden group cursor-pointer">
@@ -52,7 +68,7 @@ export const HomePage: React.FC = () => {
             {/* Hero Section */}
             <section className="relative h-[60vh] flex items-center justify-center text-center text-white px-4">
                 <div className="absolute inset-0 bg-background/60 dark:bg-background/60"></div>
-                <img src="https://images.unsplash.com/photo-1635352179895-0375a0c32915?q=80&w=1932&auto=format&fit=crop" alt="Background" className="absolute inset-0 w-full h-full object-cover -z-10"/>
+                <img src={image} alt="Background" className="absolute inset-0 w-full h-full object-fill -z-10"/>
                 <div className="relative z-10">
                     <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">Mint, Trade, Track Digital Assets on Sui</h1>
                     <p className="mt-4 max-w-2xl mx-auto text-lg text-text-secondary">
@@ -66,9 +82,9 @@ export const HomePage: React.FC = () => {
             <section className="max-w-screen-xl mx-auto py-16 px-4">
                 <h2 className="text-3xl font-bold mb-8 text-center">Quick Stats</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <StatCard value="1.2M+" label="Total Assets" />
-                    <StatCard value="500K+" label="Active Users" />
-                    <StatCard value="2.5M+" label="Transactions" />
+                    <StatCard value={1200000} label="Total Assets" />
+<StatCard value={500000} label="Active Users" />
+<StatCard value={2500000} label="Transactions" />
                 </div>
             </section>
 
